@@ -1,12 +1,16 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.DoctorDTO;
-import com.example.demo.dto.UserDTO;
-import com.example.demo.mapper.UserMapper;
-import com.example.demo.repository.UserRepository;
-import com.example.demo.model.User;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.example.demo.dto.UserDTO;
+import com.example.demo.exceptions.IdNotFoundException;
+import com.example.demo.mapper.UserMapper;
+import com.example.demo.model.User;
+import com.example.demo.repository.UserRepository;
 
 @Service
 public class UserService {
@@ -41,6 +45,16 @@ public class UserService {
 
     public User updateUser(User user) {
         return repository.save(user);
+    }
+
+    public List<User> getAllUsers(){
+        return repository.findAll();
+    }
+
+    public User getUserById(Long id){
+        return repository.findById(id)
+        .orElseThrow(() -> new IdNotFoundException(id));
+    
     }
 
 
