@@ -1,60 +1,70 @@
 package com.example.demo.service;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.dto.UserCreateDTO;
 import com.example.demo.dto.UserDTO;
+import com.example.demo.dto.UserUpdateDTO;
 import com.example.demo.exceptions.IdNotFoundException;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.User;
+import com.example.demo.model.enumroles.Role;
 import com.example.demo.repository.UserRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class UserService {
-
-    private static final String ROLE_DOCTOR = "ROLE_DOCTOR";
-    private static final String ROLE_RECEPTIONIST = "ROLE_RECEPTIONIST";
-    private static final String ROLE_PATIENT = "ROLE_PATIENT";
-
-    @Autowired
-    private UserRepository repository;
-
-    @Autowired
-    private UserMapper mapper;
-
-    public User registerReceptionist(UserDTO dto) {
-        User user = mapper.toEntity(dto);
-        user.setRoles(ROLE_RECEPTIONIST);
-        return repository.save(user);
-    }
-
-    public User registerUserDoctor(UserDTO dto) {
-        User user = mapper.toEntity(dto);
-        user.setRoles(ROLE_DOCTOR);
-        return repository.save(user);
-    }
-
-    public User registerUserPatient(UserDTO dto) {
-        User user = mapper.toEntity(dto);
-        user.setRoles(ROLE_PATIENT);
-        return repository.save(user);
-    }
-
-    public User updateUser(User user) {
-        return repository.save(user);
-    }
-
-    public List<User> getAllUsers(){
-        return repository.findAll();
-    }
-
-    public User getUserById(Long id){
-        return repository.findById(id)
-        .orElseThrow(() -> new IdNotFoundException(id));
     
+    private final UserRepository repository;
+
+    private final UserMapper mapper;
+
+
+    @Transactional
+    public UserDTO createUser(UserCreateDTO dto, Role role) {
+        User user = mapper.toEntity(dto);
+        user.setRole(role);
+        User savedUser = repository.save(user);
+        return mapper.toDTO(savedUser);
+    }
+
+    @Transactional
+    public UserDTO updateUser(Long id, UserUpdateDTO userUpdateDTO) {
+        User userExisting = repository.findById(id)
+                .orElseThrow(() -> new IdNotFoundException(id));
+        
+                mapper.updateUserFromDTO(userUpdateDTO, userExisting);
+
+        User updatedUser = repository.save(userExisting);
+        return mapper.toDTO(updatedUser);
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserDTO> findAllUsers() {
+        List<User> users = repository.findAll();
+        return users.stream()
+                .map(mapper::toDTO)
+                .toList();
+        
+    }
+
+    @Transactional(readOnly = true)
+    public UserDTO findUserById(Long id) {
+        User user = repository.findById(id)
+                .orElseThrow(() -> new IdNotFoundException(id));
+        return mapper.toDTO(user);
+    }
+
+    @Transactional
+    public void deleteUser(Long id) {
+        User user = repository.findById(id)
+                .orElseThrow(() -> new IdNotFoundException(id));
+        repository.delete(user);
     }
 
 
