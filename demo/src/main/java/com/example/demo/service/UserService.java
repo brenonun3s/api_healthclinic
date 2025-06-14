@@ -8,10 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.dto.UserCreateDTO;
 import com.example.demo.dto.UserDTO;
 import com.example.demo.dto.UserUpdateDTO;
-import com.example.demo.exceptions.IdNotFoundException;
+import com.example.demo.exceptions.UserIdNotFoundException;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.User;
-import com.example.demo.model.enumroles.Role;
+import com.example.demo.model.enumerators.Role;
 import com.example.demo.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class UserService {
     @Transactional
     public UserDTO updateUser(Long id, UserUpdateDTO userUpdateDTO) {
         User userExisting = repository.findById(id)
-                .orElseThrow(() -> new IdNotFoundException(id));
+                .orElseThrow(() -> new UserIdNotFoundException(id));
         
                 mapper.updateUserFromDTO(userUpdateDTO, userExisting);
 
@@ -56,14 +56,14 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserDTO findUserById(Long id) {
         User user = repository.findById(id)
-                .orElseThrow(() -> new IdNotFoundException(id));
+                .orElseThrow(() -> new UserIdNotFoundException(id));
         return mapper.toDTO(user);
     }
 
     @Transactional
     public void deleteUser(Long id) {
         User user = repository.findById(id)
-                .orElseThrow(() -> new IdNotFoundException(id));
+                .orElseThrow(() -> new UserIdNotFoundException(id));
         repository.delete(user);
     }
 

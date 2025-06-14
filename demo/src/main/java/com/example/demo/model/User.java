@@ -1,6 +1,6 @@
 package com.example.demo.model;
 
-import com.example.demo.model.enumroles.Role;
+import com.example.demo.model.enumerators.Role;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

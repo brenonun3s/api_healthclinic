@@ -1,12 +1,12 @@
 package com.example.demo.model;
 
+import com.example.demo.model.enumerators.StatusConsultation;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tb_consultas")
@@ -14,21 +14,30 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Setter
 @Getter
+@Builder
 public class Consultation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "date_scheduling", nullable = false)
-    private LocalDate consultationDate;
+    @Column(name = "scheduling_date", nullable = false)
+    private LocalDate schedulingDate;
 
     @ManyToOne
-    @Column(name = "patiente_scheduled", nullable = false)
+    @JoinColumn(name = "patient_scheduled", nullable = false)
     private Patient patient;
 
     @ManyToOne
-    @Column(name = "doctor_scheduled", nullable = false)
+    @JoinColumn(name = "doctor_scheduled", nullable = false)
     private Doctor doctor;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private StatusConsultation status;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
 
 }

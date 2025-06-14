@@ -1,4 +1,4 @@
-package com.example.demo.model.enumroles;
+package com.example.demo.model.enumerators;
 
 public enum Role {
     DOCTOR,

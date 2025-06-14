@@ -13,24 +13,11 @@ public class DoctorService {
     @Autowired
     private DoctorRepository repository;
 
-    public Doctor registryDoctor(Doctor doctor) {
-        return repository.save(doctor);
-    }
 
-    public Doctor updateDoctor(Doctor doctor) {
-        return repository.save(doctor);
-    }
+    //PRESCREVER MEDICAMENTO
 
-    public void deleteDoctor(Doctor doctor) {
-        repository.delete(doctor);
-    }
+    // REGISTRAR ATENDIMENTOS
 
-    public List<Doctor> getAllDoctors() {
-        return repository.findAll();
-    }
 
-    public Doctor getDoctorById(Long id) {
-        return repository.findById(id).get();
-    }
 
 }

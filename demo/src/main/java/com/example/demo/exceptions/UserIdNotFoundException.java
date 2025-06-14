@@ -2,8 +2,8 @@
 
 
 
-    public class IdNotFoundException extends RuntimeException{
-        public IdNotFoundException(Long id) {
+    public class UserIdNotFoundException extends RuntimeException{
+        public UserIdNotFoundException(Long id) {
             super("User with that ID" + id + "not found");
         }
     }
